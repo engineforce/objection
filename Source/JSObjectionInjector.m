@@ -122,11 +122,13 @@
 
 - (id)getObject:(id)classOrProtocol named:(NSString*)name initializer:(SEL)selector argumentList:(NSArray *)argumentList {
     
-    [self _startGraph];
-    id obj = [self _getObject:classOrProtocol named:name initializer:selector argumentList:argumentList];
-    [self _endGraph:true];
+    @synchronized(self) {
+        [self _startGraph];
+        id obj = [self _getObject:classOrProtocol named:name initializer:selector argumentList:argumentList];
+        [self _endGraph:true];
     
-    return obj;
+        return obj;
+    }
 }
 
 - (void)_startGraph {
@@ -299,9 +301,11 @@
 
 
 - (void)injectDependencies:(id)object {
-    [self _startGraph];
-    JSObjectionUtils.injectDependenciesIntoProperties(self, [object class], object);
-    [self _endGraph:true];
+    @synchronized(self) {
+        [self _startGraph];
+        JSObjectionUtils.injectDependenciesIntoProperties(self, [object class], object);
+        [self _endGraph:true];
+    }
 }
 
 - (NSArray *)modules {
