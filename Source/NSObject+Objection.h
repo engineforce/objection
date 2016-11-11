@@ -3,5 +3,6 @@
 @interface NSObject(JSObjection)
 
 - (void)awakeFromObjection;
+- (void)ready;
 
 @end

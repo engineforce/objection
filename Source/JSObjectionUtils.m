@@ -179,6 +179,9 @@ static void InjectDependenciesIntoProperties(JSObjectionInjector *injector, Clas
     if ([object respondsToSelector:@selector(awakeFromObjection)]) {
         [object performSelector:@selector(awakeFromObjection)];
     }
+    else if ([object respondsToSelector:@selector(ready)]) {
+        [object performSelector:@selector(ready)];
+    }
 }
 
 const struct JSObjectionUtils JSObjectionUtils = {
