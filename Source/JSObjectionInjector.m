@@ -123,9 +123,10 @@
 - (id)getObject:(id)classOrProtocol named:(NSString*)name initializer:(SEL)selector argumentList:(NSArray *)argumentList {
     
     @synchronized(self) {
+        NSUInteger count = [_graphs count];
         [self _startGraph];
         id obj = [self _getObject:classOrProtocol named:name initializer:selector argumentList:argumentList];
-        [self _endGraph:true];
+        [self _endGraph:true expectedCount:count];
     
         return obj;
     }
@@ -137,8 +138,12 @@
 
 - (void)_endGraph:(BOOL)isLast {
     [_graphs removeLastObject];
+}
+
+- (void)_endGraph:(BOOL)isLast expectedCount:(NSInteger)expectedCount {
+    [_graphs removeLastObject];
     
-    if (isLast && [_graphs count] > 0) {
+    if (isLast && [_graphs count] > expectedCount) {
         @throw [NSException exceptionWithName:@"ObjectionError"
                                        reason:@"graphs array is not empty."
                                      userInfo:nil];
@@ -302,9 +307,10 @@
 
 - (void)injectDependencies:(id)object {
     @synchronized(self) {
+        NSUInteger count = [_graphs count];
         [self _startGraph];
         JSObjectionUtils.injectDependenciesIntoProperties(self, [object class], object);
-        [self _endGraph:true];
+        [self _endGraph:true expectedCount:count];
     }
 }
 
