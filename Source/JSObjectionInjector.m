@@ -319,6 +319,60 @@
 }
 
 
+- (JSObjectionScope)getScope:(id)classOrProtocol {
+    
+    if (!classOrProtocol) {
+        @throw [NSException exceptionWithName:@"ObjectionError"
+                                       reason:@"classOrProtocol is nil."
+                                     userInfo:nil];
+    }
+    
+    NSString *key = nil;
+    BOOL isClass = class_isMetaClass(object_getClass(classOrProtocol));
+    
+    if (isClass) {
+        key = NSStringFromClass(classOrProtocol);
+    } else {
+        key = [NSString stringWithFormat:@"<%@>", NSStringFromProtocol(classOrProtocol)];
+    }
+    
+    id<JSObjectionEntry> injectorEntry = [_context objectForKey:key];
+    if (!injectorEntry) {
+        @throw [NSException exceptionWithName:@"ObjectionError"
+                                       reason:[NSString stringWithFormat:@"%@ is not registered.", classOrProtocol]
+                                     userInfo:nil];
+        
+    }
+    
+    return injectorEntry.lifeCycle;
+}
+
+- (BOOL)hasEntry:(id)classOrProtocol {
+    
+    if (!classOrProtocol) {
+        @throw [NSException exceptionWithName:@"ObjectionError"
+                                       reason:@"classOrProtocol is nil."
+                                     userInfo:nil];
+    }
+    
+    NSString *key = nil;
+    BOOL isClass = class_isMetaClass(object_getClass(classOrProtocol));
+    
+    if (isClass) {
+        key = NSStringFromClass(classOrProtocol);
+    } else {
+        key = [NSString stringWithFormat:@"<%@>", NSStringFromProtocol(classOrProtocol)];
+    }
+    
+    id<JSObjectionEntry> injectorEntry = [_context objectForKey:key];
+    if (!injectorEntry) {
+        return false;
+    }
+    
+    return true;
+}
+
+
 #pragma mark - Private
 
 - (void)initializeEagerSingletons {

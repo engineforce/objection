@@ -26,5 +26,7 @@
 - (void)injectDependencies:(id)object;
 - (id)objectForKeyedSubscript: (id)key;
 - (NSArray *)modules;
+- (JSObjectionScope)getScope:(id)classOrProtocol;
+- (BOOL)hasEntry:(id)classOrProtocol;
 
 @end

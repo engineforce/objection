@@ -1,4 +1,5 @@
 #import <Foundation/Foundation.h>
+#import "JSObjectionEntry.h"
 
 @class JSObjectionInjector;
 
@@ -13,5 +14,7 @@
 - (id)getObject:(id)classOrProtocol named:(NSString *)named withArgumentList:(NSArray *)arguments;
 - (id)objectForKeyedSubscript: (id)key;
 - (id)getObjectWithArgs:(id)classOrProtocol, ... NS_REQUIRES_NIL_TERMINATION;
+- (JSObjectionScope)getScope:(id)classOrProtocol;
+- (BOOL)hasEntry:(id)classOrProtocol;
 
 @end

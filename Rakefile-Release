@@ -30,12 +30,12 @@ end
 namespace :artifact do
   desc "Build OSX Framework"
   task :osx => :clean do
-    system_or_exit(%Q[set -o pipefail; #{xcodebuild_executable} -project #{PROJECT_NAME}.xcodeproj -target Objection -configuration Debug build | xcpretty -c], nil)
+    system_or_exit(%Q[set -o pipefail; #{xcodebuild_executable} -project #{PROJECT_NAME}.xcodeproj -target Objection -configuration Release build | xcpretty -c], nil)
   end
   
   desc "Build iOS Framework"
   task :ios  => :clean do
-    system_or_exit(%Q[set -o pipefail; #{xcodebuild_executable} -project #{PROJECT_NAME}.xcodeproj -target Objection-iOS -configuration Debug build | xcpretty -c] , nil)
+    system_or_exit(%Q[set -o pipefail; #{xcodebuild_executable} -project #{PROJECT_NAME}.xcodeproj -target Objection-iOS -configuration Release build | xcpretty -c] , nil)
   end                             
   
   require 'rake/clean'
@@ -46,8 +46,8 @@ namespace :artifact do
   task :package => [:clean, :osx, :ios] do    
     version = %x|/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" Objection-Info.plist|.strip
     mkdir_p "pkg"
-    cp_r "build/Debug-iphoneuniversal/Objection-iOS.framework", "pkg"
-    cp_r "build/Debug/Objection.framework", "pkg"
+    cp_r "build/Release-iphoneuniversal/Objection-iOS.framework", "pkg"
+    cp_r "build/Release/Objection.framework", "pkg"
     cd "pkg" do
       sh "tar cvzf Objection-#{version}.tar.gz Objection-iOS.framework Objection.framework"
     end

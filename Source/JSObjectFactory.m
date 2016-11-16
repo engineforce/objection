@@ -38,4 +38,12 @@
     return object;
 }
 
+- (JSObjectionScope)getScope:(id)classOrProtocol {
+    return [self.injector getScope:classOrProtocol];
+}
+
+- (BOOL)hasEntry:(id)classOrProtocol {
+    return [self.injector hasEntry:classOrProtocol];
+}
+
 @end
